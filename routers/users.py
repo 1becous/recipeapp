@@ -1,8 +1,11 @@
 from fastapi import APIRouter, Depends
-import schemas, models, oauth2
+from schemas import UserProfile
+from models import User
+from oauth2 import get_current_user
+
 
 router = APIRouter(prefix="/users", tags=["users"])
 
-@router.get("/me", response_model=schemas.UserProfile)
-def get_user_profile(current_user: models.User = Depends(oauth2.get_current_user)):
+@router.get("/me", response_model=UserProfile)
+def get_user_profile(current_user: User = Depends(get_current_user)):
     return current_user
