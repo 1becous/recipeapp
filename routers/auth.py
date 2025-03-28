@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from database import get_db
 from models import User
-from schemas import UserProfile, UserCreate
+from schemas import UserLogin, UserProfile, UserCreate
 from oauth2 import create_access_token
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -18,8 +18,9 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     db.refresh(db_user)
     return db_user
 
+# auth.py
 @router.post("/login")
-def login(user: UserCreate, db: Session = Depends(get_db)):
+def login(user: UserLogin, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.email == user.email).first()
     if not db_user or not pwd_context.verify(user.password, db_user.password):
         raise HTTPException(status.HTTP_403_FORBIDDEN, detail="Invalid credentials")
