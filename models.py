@@ -14,8 +14,12 @@ class User(Base):
     recipes = relationship("Recipe", back_populates="owner")
     comments = relationship("Comment", back_populates="user")
     saved_recipes = relationship("SavedRecipe", back_populates="user")
-    ratings_given = relationship("Rating", back_populates="rater")
-    ratings_received = relationship("Rating", back_populates="rated_user")
+    ratings_given = relationship("Rating", 
+                               foreign_keys="Rating.rater_id",
+                               back_populates="rater")
+    ratings_received = relationship("Rating", 
+                                  foreign_keys="Rating.rated_user_id",
+                                  back_populates="rated_user")
 
 class Recipe(Base):
     __tablename__ = "recipes"
