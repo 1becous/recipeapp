@@ -6,7 +6,7 @@ from models import User
 from schemas import UserLogin, UserProfile, UserCreate
 from oauth2 import create_access_token
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+router = APIRouter(tags=["auth"])
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 @router.post("/register", response_model=UserProfile)
