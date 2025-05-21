@@ -49,28 +49,10 @@ class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
-class RatingBase(BaseModel):
-    rating: float
-    comment: Optional[str] = None
-
-class RatingCreate(RatingBase):
-    rated_user_id: Optional[int] = None
-    recipe_id: Optional[int] = None
-
-class RatingDisplay(RatingBase):
-    id: int
-    rater_id: int
-    rated_user_id: Optional[int]
-    recipe_id: Optional[int]
-
-    class Config:
-        orm_mode = True
-
 class UserDisplay(BaseModel):
     id: int
     name: str
     email: str
-    average_rating: float
 
     class Config:
         orm_mode = True
@@ -82,7 +64,6 @@ class RecipeDisplay(BaseModel):
     instructions: str
     cooking_time: int
     difficulty: int
-    average_rating: float
     owner_id: int
 
     class Config:

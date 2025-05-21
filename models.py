@@ -9,17 +9,10 @@ class User(Base):
     name = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
-    average_rating = Column(Float, default=0.0)
 
     recipes = relationship("Recipe", back_populates="owner")
     comments = relationship("Comment", back_populates="user")
     saved_recipes = relationship("SavedRecipe", back_populates="user")
-    ratings_given = relationship("Rating", 
-                               foreign_keys="Rating.rater_id",
-                               back_populates="rater")
-    ratings_received = relationship("Rating", 
-                                  foreign_keys="Rating.rated_user_id",
-                                  back_populates="rated_user")
 
 class Recipe(Base):
     __tablename__ = "recipes"
@@ -30,13 +23,11 @@ class Recipe(Base):
     instructions = Column(Text, nullable=False)
     cooking_time = Column(Integer, nullable=False)
     difficulty = Column(Integer, nullable=False)
-    average_rating = Column(Float, default=0.0)
 
     owner_id = Column(Integer, ForeignKey("users.id"))
     owner = relationship("User", back_populates="recipes")
     comments = relationship("Comment", back_populates="recipe")
     saved_by_users = relationship("SavedRecipe", back_populates="recipe")
-    ratings = relationship("Rating", back_populates="recipe")
 
 class Comment(Base):
     __tablename__ = "comments"
@@ -60,18 +51,3 @@ class SavedRecipe(Base):
 
     user = relationship("User", back_populates="saved_recipes")
     recipe = relationship("Recipe", back_populates="saved_by_users")
-
-class Rating(Base):
-    __tablename__ = "ratings"
-
-    id = Column(Integer, primary_key=True, index=True)
-    rating = Column(Float, nullable=False)
-    comment = Column(Text, nullable=True)
-
-    rater_id = Column(Integer, ForeignKey("users.id"))
-    rated_user_id = Column(Integer, ForeignKey("users.id"))
-    recipe_id = Column(Integer, ForeignKey("recipes.id"))
-
-    rater = relationship("User", foreign_keys=[rater_id], back_populates="ratings_given")
-    rated_user = relationship("User", foreign_keys=[rated_user_id], back_populates="ratings_received")
-    recipe = relationship("Recipe", back_populates="ratings")
