@@ -5,6 +5,7 @@ from database import get_db
 from models import User
 from schemas import UserLogin, UserProfile, UserCreate
 from oauth2 import create_access_token
+from fastapi.security import OAuth2PasswordRequestForm
 
 router = APIRouter(tags=["auth"])
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -25,4 +26,14 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
     if not db_user or not pwd_context.verify(user.password, db_user.password):
         raise HTTPException(status.HTTP_403_FORBIDDEN, detail="Invalid credentials")
     token = create_access_token({"user_id": db_user.id})
+    return {"access_token": token, "token_type": "bearer"}
+
+@router.post("/token")
+def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == form_data.username).first()
+
+    if not user or not pwd_context.verify(form_data.password, user.password):
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid credentials")
+
+    token = create_access_token({"user_id": user.id})
     return {"access_token": token, "token_type": "bearer"}
