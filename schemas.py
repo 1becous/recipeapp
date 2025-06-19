@@ -66,6 +66,7 @@ class RecipeDisplay(BaseModel):
     cooking_time: int
     difficulty: int
     owner_id: int
+    user: UserProfile
 
     class Config:
         orm_mode = True
