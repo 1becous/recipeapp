@@ -43,6 +43,7 @@ class CommentDisplay(CommentBase):
     user: UserProfile
     class Config:
         from_attributes = True
+        orm_mode = True
 
 # schemas.py
 class UserLogin(BaseModel):

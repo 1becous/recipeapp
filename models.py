@@ -13,6 +13,7 @@ class User(Base):
     recipes = relationship("Recipe", back_populates="owner")
     comments = relationship("Comment", back_populates="user")
     saved_recipes = relationship("SavedRecipe", back_populates="user")
+    
 
 class Recipe(Base):
     __tablename__ = "recipes"

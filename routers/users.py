@@ -3,7 +3,6 @@ from schemas import UserProfile
 from models import User
 from oauth2 import get_current_user
 
-
 router = APIRouter(prefix="/users", tags=["users"])
 
 @router.get("/me", response_model=UserProfile)

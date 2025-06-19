@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from typing import List
 import schemas, models, database, oauth2
+
 
 router = APIRouter(prefix="/comments", tags=["comments"])
 
@@ -21,5 +22,10 @@ def create_comment(comment: schemas.CommentCreate,
 
 @router.get("/recipe/{recipe_id}", response_model=List[schemas.CommentDisplay])
 def get_comments(recipe_id: int, db: Session = Depends(database.get_db)):
-    comments = db.query(models.Comment).filter(models.Comment.recipe_id == recipe_id).all()
+    comments = (
+      db.query(models.Comment)
+        .options(joinedload(models.Comment.user))
+        .filter(models.Comment.recipe_id == recipe_id)
+        .all()
+    )
     return comments
